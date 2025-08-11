@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import { Skeleton } from "@/components/ui/skeleton";
 import { startOfMonth, endOfMonth, startOfWeek, endOfWeek, eachDayOfInterval, format, isSameMonth, isToday } from "date-fns";
+import FlipCardDate from "@/components/calendar/flip-card-date";
 import type { Event } from "@shared/schema";
 import { cn } from "@/lib/utils";
 
@@ -88,58 +89,27 @@ export default function CalendarGrid({
         {days.map((day, index) => {
           const dayEvents = getEventsForDate(day);
           const dateStr = format(day, "yyyy-MM-dd");
-          const dayNumber = format(day, "d");
           const isCurrentMonth = isSameMonth(day, currentDate);
-          const isCurrentDay = isToday(day);
 
           return (
             <motion.div
               key={dateStr}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: index * 0.01 }}
-              className={cn(
-                "min-h-[120px] p-2 cursor-pointer transition-all duration-200 hover:bg-muted/50 hover:scale-[1.02] border-b border-border",
-                !isCurrentMonth && "bg-muted/20"
-              )}
-              onClick={(e) => onDateClick(dateStr, e)}
-              data-testid={`calendar-day-${dateStr}`}
+              initial={{ opacity: 0, rotateY: -90 }}
+              animate={{ opacity: 1, rotateY: 0 }}
+              transition={{ 
+                delay: index * 0.02,
+                duration: 0.5,
+                ease: "easeOut"
+              }}
             >
-              <span
-                className={cn(
-                  "text-sm font-medium",
-                  isCurrentMonth ? "text-foreground" : "text-muted-foreground",
-                  isCurrentDay && "inline-flex items-center justify-center w-8 h-8 text-white bg-primary rounded-full font-semibold"
-                )}
-              >
-                {dayNumber}
-              </span>
-
-              {/* Events */}
-              <div className="mt-1 space-y-1">
-                {dayEvents.slice(0, 3).map((event, eventIndex) => (
-                  <motion.div
-                    key={event.id}
-                    initial={{ opacity: 0, y: 5 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: eventIndex * 0.1 }}
-                    className={cn(
-                      "text-xs px-2 py-1 rounded-md font-medium truncate cursor-pointer hover:opacity-80 transition-opacity",
-                      eventColors[event.color as keyof typeof eventColors] || "bg-primary text-white"
-                    )}
-                    onClick={(e) => onEventClick(event, e)}
-                    data-testid={`event-card-${event.id}`}
-                  >
-                    {event.title}
-                  </motion.div>
-                ))}
-                
-                {dayEvents.length > 3 && (
-                  <div className="text-xs text-muted-foreground font-medium px-2">
-                    +{dayEvents.length - 3} more
-                  </div>
-                )}
-              </div>
+              <FlipCardDate
+                date={day}
+                dateStr={dateStr}
+                events={dayEvents}
+                isCurrentMonth={isCurrentMonth}
+                onClick={onDateClick}
+                onEventClick={onEventClick}
+              />
             </motion.div>
           );
         })}

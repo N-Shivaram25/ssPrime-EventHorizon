@@ -1,11 +1,18 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { 
+  GlassDialog, 
+  GlassDialogContent, 
+  GlassDialogHeader, 
+  GlassDialogTitle,
+  GlassDialogDescription 
+} from "@/components/ui/glass-dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
+import { useConfetti } from "@/hooks/use-confetti";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import type { Event, InsertEvent } from "@shared/schema";
@@ -26,6 +33,7 @@ const eventColors = [
 
 export default function EventModal({ isOpen, selectedDate, editingEvent, onClose }: EventModalProps) {
   const { toast } = useToast();
+  const { triggerSuccess } = useConfetti();
   const queryClient = useQueryClient();
 
   const [formData, setFormData] = useState({
@@ -66,6 +74,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
+      triggerSuccess();
       toast({
         title: "Success",
         description: "Event created successfully",
@@ -88,6 +97,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
+      triggerSuccess();
       toast({
         title: "Success",
         description: "Event updated successfully",
@@ -136,22 +146,20 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
-        <motion.div
-          initial={{ opacity: 0, scale: 0.9, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={{ duration: 0.3 }}
-        >
-          <DialogHeader>
-            <DialogTitle>
-              {editingEvent ? "Edit Event" : "Add New Event"}
-            </DialogTitle>
-          </DialogHeader>
+    <GlassDialog open={isOpen} onOpenChange={onClose}>
+      <GlassDialogContent className="sm:max-w-[425px]">
+        <GlassDialogHeader>
+          <GlassDialogTitle>
+            {editingEvent ? "Edit Event" : "Add New Event"}
+          </GlassDialogTitle>
+          <GlassDialogDescription>
+            {editingEvent ? "Update your event details" : "Create a new event for your calendar"}
+          </GlassDialogDescription>
+        </GlassDialogHeader>
 
-          <form onSubmit={handleSubmit} className="space-y-4 mt-4">
+        <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div>
-              <Label htmlFor="title" className="text-sm font-medium">
+              <Label htmlFor="title" className="text-sm font-medium text-white/90">
                 Event Title
               </Label>
               <Input
@@ -160,13 +168,13 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
                 placeholder="Enter event title"
-                className="focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                className="glass border-white/20 text-white placeholder:text-white/50 focus:ring-2 focus:ring-primary/50 liquid-transition"
                 data-testid="input-event-title"
               />
             </div>
 
             <div>
-              <Label htmlFor="date" className="text-sm font-medium">
+              <Label htmlFor="date" className="text-sm font-medium text-white/90">
                 Date
               </Label>
               <Input
@@ -174,14 +182,14 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 type="date"
                 value={formData.date}
                 onChange={(e) => handleInputChange("date", e.target.value)}
-                className="focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                className="glass border-white/20 text-white liquid-transition"
                 data-testid="input-event-date"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="startTime" className="text-sm font-medium">
+                <Label htmlFor="startTime" className="text-sm font-medium text-white/90">
                   Start Time
                 </Label>
                 <Input
@@ -189,12 +197,12 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                   type="time"
                   value={formData.startTime}
                   onChange={(e) => handleInputChange("startTime", e.target.value)}
-                  className="focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                  className="glass border-white/20 text-white liquid-transition"
                   data-testid="input-start-time"
                 />
               </div>
               <div>
-                <Label htmlFor="endTime" className="text-sm font-medium">
+                <Label htmlFor="endTime" className="text-sm font-medium text-white/90">
                   End Time
                 </Label>
                 <Input
@@ -202,14 +210,14 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                   type="time"
                   value={formData.endTime}
                   onChange={(e) => handleInputChange("endTime", e.target.value)}
-                  className="focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                  className="glass border-white/20 text-white liquid-transition"
                   data-testid="input-end-time"
                 />
               </div>
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-2 block">Color</Label>
+              <Label className="text-sm font-medium mb-2 block text-white/90">Color</Label>
               <div className="flex space-x-2">
                 {eventColors.map((color) => (
                   <button
@@ -230,7 +238,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
             </div>
 
             <div>
-              <Label htmlFor="description" className="text-sm font-medium">
+              <Label htmlFor="description" className="text-sm font-medium text-white/90">
                 Description (Optional)
               </Label>
               <Textarea
@@ -238,7 +246,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 value={formData.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
                 placeholder="Add event description..."
-                className="resize-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all duration-200"
+                className="resize-none glass border-white/20 text-white placeholder:text-white/50 liquid-transition"
                 rows={3}
                 data-testid="textarea-event-description"
               />
@@ -249,23 +257,32 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 type="button"
                 variant="outline"
                 onClick={onClose}
-                className="flex-1 transition-all duration-200 hover:scale-105"
+                className="flex-1 glass border-white/20 text-white hover:bg-white/10 liquid-transition"
                 data-testid="button-cancel"
               >
                 Cancel
               </Button>
-              <Button
-                type="submit"
-                className="flex-1 bg-primary hover:bg-blue-600 transition-all duration-200 hover:scale-105 hover:shadow-lg"
-                disabled={createMutation.isPending || updateMutation.isPending}
-                data-testid="button-save-event"
+              <motion.div
+                layoutId="add-button"
+                className="flex-1"
               >
-                {createMutation.isPending || updateMutation.isPending ? "Saving..." : "Save Event"}
-              </Button>
+                <Button
+                  type="submit"
+                  className="w-full bg-primary hover:bg-blue-600 liquid-transition hover:scale-105 hover:shadow-lg"
+                  disabled={createMutation.isPending || updateMutation.isPending}
+                  data-testid="button-save-event"
+                >
+                  <motion.div
+                    layoutId="plus-icon"
+                    className="flex items-center justify-center"
+                  >
+                    {createMutation.isPending || updateMutation.isPending ? "Saving..." : "Save Event"}
+                  </motion.div>
+                </Button>
+              </motion.div>
             </div>
           </form>
-        </motion.div>
-      </DialogContent>
-    </Dialog>
+      </GlassDialogContent>
+    </GlassDialog>
   );
 }

@@ -1,7 +1,10 @@
 import { motion } from "framer-motion";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight, Plus, Moon, Sun, Calendar, List } from "lucide-react";
 import { format } from "date-fns";
+import GradientTimeIndicator from "@/components/ui/gradient-time-indicator";
+import { useConfetti } from "@/hooks/use-confetti";
 import type { ViewMode } from "@/pages/calendar";
 
 interface CalendarHeaderProps {
@@ -16,6 +19,11 @@ interface CalendarHeaderProps {
   onToday: () => void;
 }
 
+interface MousePosition {
+  x: number;
+  y: number;
+}
+
 export default function CalendarHeader({
   theme,
   viewMode,
@@ -27,9 +35,32 @@ export default function CalendarHeader({
   onNextMonth,
   onToday,
 }: CalendarHeaderProps) {
+  const [mousePosition, setMousePosition] = useState<MousePosition>({ x: 50, y: 50 });
+  const { triggerThemeChange } = useConfetti();
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = ((e.clientX - rect.left) / rect.width) * 100;
+    const y = ((e.clientY - rect.top) / rect.height) * 100;
+    setMousePosition({ x, y });
+  };
+
+  const handleThemeToggle = () => {
+    triggerThemeChange();
+    onThemeToggle();
+  };
+
   return (
-    <header className="bg-background border-b border-border sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <header 
+      className="bg-background border-b border-border sticky top-0 z-40 spotlight overflow-hidden"
+      onMouseMove={handleMouseMove}
+      style={{
+        '--x': `${mousePosition.x}%`,
+        '--y': `${mousePosition.y}%`,
+      } as React.CSSProperties}
+    >
+      <GradientTimeIndicator />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="flex justify-between items-center h-16">
           {/* App Title */}
           <div className="flex items-center">
@@ -41,12 +72,12 @@ export default function CalendarHeader({
           {/* Navigation Controls */}
           <div className="flex items-center space-x-4">
             {/* View Toggle */}
-            <div className="flex items-center bg-muted rounded-lg p-1">
+            <div className="flex items-center neumorphic rounded-lg p-1">
               <Button
                 variant={viewMode === "grid" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => onViewModeChange("grid")}
-                className="flex items-center text-sm font-medium transition-all duration-200 hover:scale-105"
+                className="flex items-center text-sm font-medium liquid-transition hover:scale-105"
                 data-testid="button-grid-view"
               >
                 <Calendar className="w-4 h-4 mr-2" />
@@ -56,7 +87,7 @@ export default function CalendarHeader({
                 variant={viewMode === "list" ? "default" : "ghost"}
                 size="sm"
                 onClick={() => onViewModeChange("list")}
-                className="flex items-center text-sm font-medium transition-all duration-200 hover:scale-105"
+                className="flex items-center text-sm font-medium liquid-transition hover:scale-105"
                 data-testid="button-list-view"
               >
                 <List className="w-4 h-4 mr-2" />
@@ -103,8 +134,8 @@ export default function CalendarHeader({
             <Button
               variant="ghost"
               size="sm"
-              onClick={onThemeToggle}
-              className="p-2 hover:scale-110 transition-all duration-200"
+              onClick={handleThemeToggle}
+              className="p-2 neumorphic hover:scale-110 liquid-transition"
               data-testid="button-theme-toggle"
             >
               {theme === "light" ? (
@@ -116,16 +147,22 @@ export default function CalendarHeader({
 
             {/* Add Event Button */}
             <motion.div
+              layoutId="add-button"
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
               <Button
                 onClick={onAddEvent}
-                className="bg-primary hover:bg-blue-600 text-white font-medium shadow-lg transition-all duration-200"
+                className="bg-primary hover:bg-blue-600 text-white font-medium shadow-lg liquid-transition animate-morph"
                 data-testid="button-add-event"
               >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Event
+                <motion.div
+                  layoutId="plus-icon"
+                  className="flex items-center"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add Event
+                </motion.div>
               </Button>
             </motion.div>
           </div>

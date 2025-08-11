@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { X, Edit, Trash2, Calendar, Clock, FileText } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { useConfetti } from "@/hooks/use-confetti";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { format } from "date-fns";
@@ -24,6 +25,7 @@ const eventColors = {
 
 export default function EventPopover({ event, position, onClose, onEdit }: EventPopoverProps) {
   const { toast } = useToast();
+  const { triggerDelete } = useConfetti();
   const queryClient = useQueryClient();
 
   const deleteMutation = useMutation({
@@ -32,6 +34,7 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/events"] });
+      triggerDelete();
       toast({
         title: "Success",
         description: "Event deleted successfully",
@@ -80,7 +83,7 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
         top: Math.min(position.y, window.innerHeight - 200),
       }}
     >
-      <Card className="w-80 shadow-xl border-border bg-card">
+      <Card className="w-80 shadow-xl glass border-white/20">
         <CardContent className="p-4">
           {/* Header */}
           <div className="flex items-start justify-between mb-3">
@@ -88,7 +91,7 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
               <div 
                 className={`w-3 h-3 rounded-full ${eventColors[event.color as keyof typeof eventColors] || "bg-primary"}`}
               />
-              <h4 className="font-semibold text-card-foreground truncate">
+              <h4 className="font-semibold text-white/90 truncate">
                 {event.title}
               </h4>
             </div>
@@ -104,7 +107,7 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
           </div>
 
           {/* Event Details */}
-          <div className="space-y-2 text-sm text-muted-foreground">
+          <div className="space-y-2 text-sm text-white/70">
             <div className="flex items-center space-x-2">
               <Calendar className="w-4 h-4 text-primary" />
               <span>{formattedDate}</span>
@@ -122,12 +125,12 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
           </div>
 
           {/* Actions */}
-          <div className="flex space-x-2 mt-4 pt-3 border-t border-border">
+          <div className="flex space-x-2 mt-4 pt-3 border-t border-white/20">
             <Button
               variant="outline"
               size="sm"
               onClick={handleEdit}
-              className="flex-1 text-primary hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-all duration-200"
+              className="flex-1 glass border-white/20 text-white hover:bg-white/10 liquid-transition"
               data-testid="button-edit-event"
             >
               <Edit className="w-4 h-4 mr-1" />
@@ -138,7 +141,7 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
               size="sm"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="flex-1 text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20 transition-all duration-200"
+              className="flex-1 glass border-white/20 text-red-400 hover:bg-red-500/20 liquid-transition"
               data-testid="button-delete-event"
             >
               <Trash2 className="w-4 h-4 mr-1" />

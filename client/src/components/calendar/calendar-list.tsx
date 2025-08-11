@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { ParallaxProvider, Parallax } from "react-scroll-parallax";
 import { format, startOfMonth, endOfMonth, eachDayOfInterval, isSameDay, isToday } from "date-fns";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
@@ -89,124 +90,130 @@ export default function CalendarList({
   }
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 10 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.3 }}
-      className="space-y-6"
-    >
-      {relevantDates.map((date, dateIndex) => {
-        const dateStr = format(date, "yyyy-MM-dd");
-        const dayEvents = eventsByDate[dateStr] || [];
-        const isCurrentDay = isToday(date);
+    <ParallaxProvider>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+        className="space-y-6"
+      >
+        {relevantDates.map((date, dateIndex) => {
+          const dateStr = format(date, "yyyy-MM-dd");
+          const dayEvents = eventsByDate[dateStr] || [];
+          const isCurrentDay = isToday(date);
 
-        return (
-          <motion.div
-            key={dateStr}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: dateIndex * 0.05 }}
-          >
-            {/* Date Header */}
-            <div className="flex items-center space-x-3 mb-4">
-              <div
-                className={cn(
-                  "flex flex-col items-center justify-center w-16 h-16 rounded-xl border",
-                  isCurrentDay
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card border-border"
-                )}
-              >
-                <span className="text-xs font-medium uppercase">
-                  {format(date, "MMM")}
-                </span>
-                <span className="text-lg font-bold">
-                  {format(date, "d")}
-                </span>
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-foreground">
-                  {format(date, "EEEE, MMMM d")}
-                </h3>
-                <p className="text-sm text-muted-foreground">
-                  {dayEvents.length === 0 ? "No events" : `${dayEvents.length} event${dayEvents.length !== 1 ? 's' : ''}`}
-                </p>
-              </div>
-            </div>
+          return (
+            <motion.div
+              key={dateStr}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: dateIndex * 0.05 }}
+            >
+              {/* Date Header with Parallax */}
+              <Parallax speed={-5}>
+                <div className="flex items-center space-x-3 mb-4">
+                  <div
+                    className={cn(
+                      "flex flex-col items-center justify-center w-16 h-16 rounded-xl border neumorphic",
+                      isCurrentDay
+                        ? "bg-primary text-primary-foreground border-primary"
+                        : "bg-card border-border"
+                    )}
+                  >
+                    <span className="text-xs font-medium uppercase">
+                      {format(date, "MMM")}
+                    </span>
+                    <span className="text-lg font-bold">
+                      {format(date, "d")}
+                    </span>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-foreground">
+                      {format(date, "EEEE, MMMM d")}
+                    </h3>
+                    <p className="text-sm text-muted-foreground">
+                      {dayEvents.length === 0 ? "No events" : `${dayEvents.length} event${dayEvents.length !== 1 ? 's' : ''}`}
+                    </p>
+                  </div>
+                </div>
+              </Parallax>
 
-            {/* Events List */}
-            {dayEvents.length > 0 && (
-              <div className="space-y-3 ml-16">
-                {dayEvents.map((event, eventIndex) => {
-                  const startTime = formatTime(event.startTime);
-                  const endTime = formatTime(event.endTime);
-                  const timeRange = startTime && endTime
-                    ? `${startTime} - ${endTime}`
-                    : startTime
-                    ? startTime
-                    : "All day";
+              {/* Events List with Parallax */}
+              {dayEvents.length > 0 && (
+                <Parallax speed={-2}>
+                  <div className="space-y-3 ml-16">
+                    {dayEvents.map((event, eventIndex) => {
+                      const startTime = formatTime(event.startTime);
+                      const endTime = formatTime(event.endTime);
+                      const timeRange = startTime && endTime
+                        ? `${startTime} - ${endTime}`
+                        : startTime
+                        ? startTime
+                        : "All day";
 
-                  return (
-                    <motion.div
-                      key={event.id}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: eventIndex * 0.05 }}
-                    >
-                      <Card
-                        className="cursor-pointer hover:shadow-md transition-all duration-200 hover:scale-[1.02] border-l-4"
-                        style={{ borderLeftColor: event.color }}
-                        onClick={(e) => onEventClick(event, e)}
-                        data-testid={`list-event-card-${event.id}`}
-                      >
-                        <CardContent className="p-4">
-                          <div className="flex items-start justify-between">
-                            <div className="flex-1 min-w-0">
-                              <div className="flex items-center space-x-2 mb-2">
-                                <Badge
-                                  className={cn(
-                                    "text-xs font-medium",
-                                    eventColors[event.color as keyof typeof eventColors] || "bg-primary text-white"
+                      return (
+                        <motion.div
+                          key={event.id}
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ delay: eventIndex * 0.05 }}
+                        >
+                          <Card
+                            className="cursor-pointer glass hover:shadow-md liquid-transition hover:scale-[1.02] border-l-4"
+                            style={{ borderLeftColor: event.color }}
+                            onClick={(e) => onEventClick(event, e)}
+                            data-testid={`list-event-card-${event.id}`}
+                          >
+                            <CardContent className="p-4">
+                              <div className="flex items-start justify-between">
+                                <div className="flex-1 min-w-0">
+                                  <div className="flex items-center space-x-2 mb-2">
+                                    <Badge
+                                      className={cn(
+                                        "text-xs font-medium neumorphic",
+                                        eventColors[event.color as keyof typeof eventColors] || "bg-primary text-white"
+                                      )}
+                                    >
+                                      {event.title}
+                                    </Badge>
+                                  </div>
+                                  
+                                  <div className="flex items-center text-sm text-muted-foreground mb-1">
+                                    <Clock className="w-4 h-4 mr-2" />
+                                    <span>{timeRange}</span>
+                                  </div>
+                                  
+                                  {event.description && (
+                                    <div className="flex items-start text-sm text-muted-foreground">
+                                      <FileText className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
+                                      <span className="break-words">{event.description}</span>
+                                    </div>
                                   )}
-                                >
-                                  {event.title}
-                                </Badge>
-                              </div>
-                              
-                              <div className="flex items-center text-sm text-muted-foreground mb-1">
-                                <Clock className="w-4 h-4 mr-2" />
-                                <span>{timeRange}</span>
-                              </div>
-                              
-                              {event.description && (
-                                <div className="flex items-start text-sm text-muted-foreground">
-                                  <FileText className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
-                                  <span className="break-words">{event.description}</span>
                                 </div>
-                              )}
-                            </div>
-                            
-                            <div
-                              className={cn(
-                                "w-3 h-3 rounded-full flex-shrink-0 ml-3",
-                                eventColors[event.color as keyof typeof eventColors]?.replace("text-white", "") || "bg-primary"
-                              )}
-                            />
-                          </div>
-                        </CardContent>
-                      </Card>
-                    </motion.div>
-                  );
-                })}
-              </div>
-            )}
-            
-            {dateIndex < relevantDates.length - 1 && (
-              <Separator className="mt-6" />
-            )}
-          </motion.div>
-        );
-      })}
-    </motion.div>
+                                
+                                <div
+                                  className={cn(
+                                    "w-3 h-3 rounded-full flex-shrink-0 ml-3",
+                                    eventColors[event.color as keyof typeof eventColors]?.replace("text-white", "") || "bg-primary"
+                                  )}
+                                />
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </Parallax>
+              )}
+              
+              {dateIndex < relevantDates.length - 1 && (
+                <Separator className="mt-6" />
+              )}
+            </motion.div>
+          );
+        })}
+      </motion.div>
+    </ParallaxProvider>
   );
 }
