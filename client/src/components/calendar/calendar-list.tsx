@@ -117,13 +117,13 @@ export default function CalendarList({
                       "flex flex-col items-center justify-center w-16 h-16 rounded-xl border neumorphic",
                       isCurrentDay
                         ? "bg-primary text-primary-foreground border-primary"
-                        : "bg-card border-border"
+                        : "bg-card border-border text-foreground"
                     )}
                   >
-                    <span className="text-xs font-medium uppercase">
+                    <span className="text-xs font-medium uppercase text-inherit">
                       {format(date, "MMM")}
                     </span>
-                    <span className="text-lg font-bold">
+                    <span className="text-lg font-bold text-inherit">
                       {format(date, "d")}
                     </span>
                   </div>
@@ -169,10 +169,12 @@ export default function CalendarList({
                                 <div className="flex-1 min-w-0">
                                   <div className="flex items-center space-x-2 mb-2">
                                     <Badge
-                                      className={cn(
-                                        "text-xs font-medium neumorphic",
-                                        eventColors[event.color as keyof typeof eventColors] || "bg-primary text-white"
-                                      )}
+                                      className="text-xs font-medium neumorphic bg-muted text-foreground border"
+                                      style={{ 
+                                        borderLeft: `3px solid ${event.color}`,
+                                        backgroundColor: 'hsl(var(--muted))',
+                                        color: 'hsl(var(--foreground))'
+                                      }}
                                     >
                                       {event.title}
                                     </Badge>
