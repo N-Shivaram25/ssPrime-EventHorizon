@@ -124,7 +124,7 @@ export default function FlipCardDate({
         </div>
 
         {/* Back Side - Event Details */}
-        <div className="flip-card-back p-2 neumorphic">
+        <div className="flip-card-back p-2 neumorphic bg-card text-card-foreground">
           <div className="flex items-center justify-between mb-2">
             <span className="text-sm font-semibold text-foreground">
               {dayNumber}
@@ -141,17 +141,17 @@ export default function FlipCardDate({
                   key={event.id}
                   initial={{ opacity: 0, x: 10 }}
                   animate={{ opacity: 1, x: 0 }}
-                  className="text-xs p-2 rounded glass border border-white/20 cursor-pointer hover:bg-white/10"
+                  className="text-xs p-2 rounded glass border border-border cursor-pointer hover:bg-muted/50"
                   onClick={(e) => {
                     e.stopPropagation();
                     onEventClick(event, e);
                   }}
                 >
-                  <div className="font-medium text-white/90 mb-1">
+                  <div className="font-medium text-foreground mb-1">
                     {event.title}
                   </div>
                   {startTime && (
-                    <div className="flex items-center text-white/70">
+                    <div className="flex items-center text-muted-foreground">
                       <Clock className="w-3 h-3 mr-1" />
                       <span>{startTime}</span>
                     </div>
