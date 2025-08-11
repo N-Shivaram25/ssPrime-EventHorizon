@@ -1,0 +1,122 @@
+Build a Google Calendar-inspired React app with sleek animations, micro-interactions, and a responsive layout using Vite.
+Core Features (Functional)
+
+    Calendar Views
+
+        Grid View: Classic month grid with:
+
+            Day cells (hover effect: scale(1.02) + box-shadow).
+
+            Current date highlighted with a border-radius: 50% and accent color.
+
+        List View: Vertical scrollable list (like Fantastical) with:
+
+            Collapsible daily sections.
+
+            Event cards (slide-in animation on load).
+
+    Event Management
+
+        Add/Edit Event Modal:
+
+            Animated entrance (fade-in + slide-up).
+
+            Form with focus:ring effects on inputs.
+
+        Event Popover:
+
+            Appears on date click (smooth scale(0.9) → scale(1) transition).
+
+            Exit animation (fade-out).
+
+    Theme Toggle
+
+        Light/Dark Mode:
+
+            Seamless transition (transition: all 300ms ease-in-out).
+
+            Dark mode: bg-gray-900 with text-gray-100.
+
+            Light mode: bg-white with text-gray-800.
+
+    LocalStorage Sync
+
+        Auto-save events (no manual "Save" button needed).
+
+UI/UX Design Specs
+1. Styling Guidelines
+
+    Typography:
+
+        Fonts: Use Inter (clean, modern) or system stack (-apple-system, BlinkMacSystemFont).
+
+        Hierarchy:
+
+            Dates: font-weight: 500.
+
+            Event titles: font-weight: 600.
+
+    Colors:
+
+        Primary: #3B82F6 (blue, like Google Calendar).
+
+        Event Colors: Predefined palette (e.g., #EF4444, #10B981, #F59E0B).
+
+        Hover States:
+
+            Buttons: bg-opacity-90 + transform: translateY(-1px).
+
+            Dates: bg-gray-100/50 (light) or bg-gray-700/50 (dark).
+
+    Shadows & Depth:
+
+        Modal: shadow-xl (box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1)).
+
+        Event cards: shadow-sm + border for subtle separation.
+
+2. Transitions & Animations
+
+    View Switching:
+
+        Grid ↔ List: Cross-fade (opacity + translateY animation).
+
+    Event Interactions:
+
+        Create/Delete:
+
+            Add: fade-in + stagger effect for list view.
+
+            Delete: shrink-to-zero animation.
+
+        Drag Preview (if drag-and-drop is added): opacity: 0.8 + rotate(2deg).
+
+    Skeleton Loaders: For initial data fetch (pulse animation).
+
+3. Responsive Design
+
+    Mobile:
+
+        Stacked layout (no side margins).
+
+        Modal at 100vw width.
+
+    Desktop:
+
+        Max-width 1200px centered container.
+
+Tech Stack Suggestions
+
+    Animation Library: framer-motion (for advanced transitions).
+
+    Date Handling: date-fns (lightweight).
+
+    Icons: react-icons (Feather or Material Icons).
+
+AI Contribution Declaration
+markdown
+
+## Features Built with AI Assistance  
+- Modal animation logic (`framer-motion`).  
+- Color scheme suggestions (WCAG-compliant contrasts).  
+- LocalStorage CRUD hooks.  
+- Responsive layout breakpoints.  
