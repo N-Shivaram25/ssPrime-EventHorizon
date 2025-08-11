@@ -255,34 +255,22 @@
 /* Minimalist input styling */
 .minimalist-input {
   border: none;
-  border-bottom: 2px solid #E5E7EB;
+  border-bottom: 2px solid hsl(var(--border));
   background: transparent;
   border-radius: 0;
   padding: 8px 0;
   transition: border-color 0.3s ease;
+  color: hsl(var(--foreground));
 }
 
 .minimalist-input:focus {
   outline: none;
-  border-bottom-color: #3B82F6;
+  border-bottom-color: hsl(var(--primary));
   box-shadow: none;
 }
 
-.dark .minimalist-input {
-  border-bottom-color: #374151;
-  color: white;
-}
-
-.dark .minimalist-input:focus {
-  border-bottom-color: #3B82F6;
-}
-
 .minimalist-input::placeholder {
-  color: #9CA3AF;
-}
-
-.dark .minimalist-input::placeholder {
-  color: #6B7280;
+  color: hsl(var(--muted-foreground));
 }
 
 /* 3D flip card styles */

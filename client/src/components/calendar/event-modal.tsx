@@ -159,7 +159,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-4">
             <div>
-              <Label htmlFor="title" className="text-sm font-medium text-white/90">
+              <Label htmlFor="title" className="text-sm font-medium text-foreground">
                 Event Title
               </Label>
               <Input
@@ -168,13 +168,13 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
                 placeholder="Enter event title"
-                className="minimalist-input text-white placeholder:text-white/50"
+                className="minimalist-input text-foreground placeholder:text-muted-foreground"
                 data-testid="input-event-title"
               />
             </div>
 
             <div>
-              <Label htmlFor="date" className="text-sm font-medium text-white/90">
+              <Label htmlFor="date" className="text-sm font-medium text-foreground">
                 Date
               </Label>
               <Input
@@ -182,14 +182,14 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 type="date"
                 value={formData.date}
                 onChange={(e) => handleInputChange("date", e.target.value)}
-                className="minimalist-input text-white"
+                className="minimalist-input text-foreground"
                 data-testid="input-event-date"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="startTime" className="text-sm font-medium text-white/90">
+                <Label htmlFor="startTime" className="text-sm font-medium text-foreground">
                   Start Time
                 </Label>
                 <Input
@@ -197,12 +197,12 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                   type="time"
                   value={formData.startTime}
                   onChange={(e) => handleInputChange("startTime", e.target.value)}
-                  className="minimalist-input text-white"
+                  className="minimalist-input text-foreground"
                   data-testid="input-start-time"
                 />
               </div>
               <div>
-                <Label htmlFor="endTime" className="text-sm font-medium text-white/90">
+                <Label htmlFor="endTime" className="text-sm font-medium text-foreground">
                   End Time
                 </Label>
                 <Input
@@ -210,24 +210,24 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                   type="time"
                   value={formData.endTime}
                   onChange={(e) => handleInputChange("endTime", e.target.value)}
-                  className="minimalist-input text-white"
+                  className="minimalist-input text-foreground"
                   data-testid="input-end-time"
                 />
               </div>
             </div>
 
             <div>
-              <Label className="text-sm font-medium mb-2 block text-white/90">Color</Label>
+              <Label className="text-sm font-medium mb-2 block text-foreground">Color</Label>
               <div className="flex space-x-2">
                 {eventColors.map((color) => (
                   <button
                     key={color.value}
                     type="button"
-                    className={`w-8 h-8 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform ${
+                    className={`w-8 h-8 rounded-full border-2 border-border shadow-sm hover:scale-110 transition-transform ${
                       color.className
                     } ${
                       formData.color === color.value
-                        ? "ring-2 ring-offset-2 ring-gray-400"
+                        ? "ring-2 ring-offset-2 ring-primary"
                         : ""
                     }`}
                     onClick={() => handleInputChange("color", color.value)}
@@ -238,7 +238,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
             </div>
 
             <div>
-              <Label htmlFor="description" className="text-sm font-medium text-white/90">
+              <Label htmlFor="description" className="text-sm font-medium text-foreground">
                 Description (Optional)
               </Label>
               <Textarea
@@ -246,7 +246,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 value={formData.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
                 placeholder="Add event description..."
-                className="resize-none minimalist-input text-white placeholder:text-white/50"
+                className="resize-none minimalist-input text-foreground placeholder:text-muted-foreground"
                 rows={3}
                 data-testid="textarea-event-description"
               />
@@ -257,7 +257,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 type="button"
                 variant="ghost"
                 onClick={onClose}
-                className="flex-1 text-white/70 hover:text-white hover:bg-transparent liquid-transition"
+                className="flex-1 text-muted-foreground hover:text-foreground hover:bg-muted liquid-transition"
                 data-testid="button-cancel"
               >
                 Cancel

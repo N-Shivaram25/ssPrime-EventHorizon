@@ -83,7 +83,7 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
         top: Math.min(position.y, window.innerHeight - 200),
       }}
     >
-      <Card className="w-80 shadow-xl glass border-white/20">
+      <Card className="w-80 shadow-xl glass border-border">
         <CardContent className="p-4">
           {/* Header */}
           <div className="flex items-start justify-between mb-3">
@@ -91,7 +91,7 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
               <div 
                 className={`w-3 h-3 rounded-full ${eventColors[event.color as keyof typeof eventColors] || "bg-primary"}`}
               />
-              <h4 className="font-semibold text-white/90 truncate">
+              <h4 className="font-semibold text-foreground truncate">
                 {event.title}
               </h4>
             </div>
@@ -107,7 +107,7 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
           </div>
 
           {/* Event Details */}
-          <div className="space-y-2 text-sm text-white/70">
+          <div className="space-y-2 text-sm text-muted-foreground">
             <div className="flex items-center space-x-2">
               <Calendar className="w-4 h-4 text-primary" />
               <span>{formattedDate}</span>
@@ -125,12 +125,12 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
           </div>
 
           {/* Actions */}
-          <div className="flex space-x-2 mt-4 pt-3 border-t border-white/20">
+          <div className="flex space-x-2 mt-4 pt-3 border-t border-border">
             <Button
               variant="outline"
               size="sm"
               onClick={handleEdit}
-              className="flex-1 glass border-white/20 text-white hover:bg-white/10 liquid-transition"
+              className="flex-1 glass border-border text-foreground hover:bg-muted liquid-transition"
               data-testid="button-edit-event"
             >
               <Edit className="w-4 h-4 mr-1" />
@@ -141,7 +141,7 @@ export default function EventPopover({ event, position, onClose, onEdit }: Event
               size="sm"
               onClick={handleDelete}
               disabled={deleteMutation.isPending}
-              className="flex-1 glass border-white/20 text-red-400 hover:bg-red-500/20 liquid-transition"
+              className="flex-1 glass border-border text-red-500 hover:bg-red-500/10 liquid-transition"
               data-testid="button-delete-event"
             >
               <Trash2 className="w-4 h-4 mr-1" />
