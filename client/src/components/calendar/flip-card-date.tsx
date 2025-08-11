@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { format, isToday, isSameMonth } from "date-fns";
 import { Clock, Calendar } from "lucide-react";
+import { Tooltip, TooltipContent, TooltipTrigger, TooltipProvider } from "@/components/ui/tooltip";
 import { cn } from "@/lib/utils";
 import type { Event } from "@shared/schema";
 
@@ -52,21 +53,22 @@ export default function FlipCardDate({
   return (
     <motion.div
       className={cn(
-        "flip-card min-h-[120px] cursor-pointer border-b border-border liquid-transition",
+        "flip-card min-h-[120px] cursor-pointer calendar-cell liquid-transition",
         !isCurrentMonth && "bg-muted/20",
+        isCurrentDay && "current-date",
         isFlipped && "flipped"
       )}
       onClick={handleClick}
       data-testid={`calendar-day-${dateStr}`}
-      whileHover={{ scale: 1.02 }}
-      transition={{ duration: 0.2 }}
+      whileHover={{ scale: 1.03 }}
+      transition={{ duration: 0.3, ease: "easeOut" }}
     >
       <div className="flip-card-inner">
         {/* Front Side - Date */}
-        <div className="flip-card-front p-2 neumorphic">
+        <div className="flip-card-front p-3">
           <span
             className={cn(
-              "text-sm font-medium block mb-2",
+              "text-sm font-medium block mb-3",
               isCurrentMonth ? "text-foreground" : "text-muted-foreground",
               isCurrentDay && "inline-flex items-center justify-center w-8 h-8 text-white bg-primary rounded-full font-semibold"
             )}
@@ -74,31 +76,49 @@ export default function FlipCardDate({
             {dayNumber}
           </span>
 
-          {/* Event Indicators */}
+          {/* Event Indicators - Show colored dots for max 3 events */}
           <div className="space-y-1">
-            {events.slice(0, 3).map((event, index) => (
+            {events.length > 0 && (
+              <TooltipProvider>
+                <div className="flex flex-wrap gap-1 mb-2">
+                  {events.slice(0, 3).map((event, index) => (
+                    <Tooltip key={event.id}>
+                      <TooltipTrigger asChild>
+                        <motion.div
+                          initial={{ opacity: 0, scale: 0 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          transition={{ delay: index * 0.1 }}
+                          className="event-dot cursor-pointer hover:scale-125 liquid-transition"
+                          style={{ backgroundColor: event.color }}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            onEventClick(event, e);
+                          }}
+                        />
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{event.title}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  ))}
+                  {events.length > 3 && (
+                    <span className="text-xs text-muted-foreground ml-1">
+                      +{events.length - 3}
+                    </span>
+                  )}
+                </div>
+              </TooltipProvider>
+            )}
+            
+            {/* First event title preview */}
+            {events.length > 0 && (
               <motion.div
-                key={event.id}
                 initial={{ opacity: 0, y: 5 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className={cn(
-                  "text-xs px-2 py-1 rounded-md font-medium truncate",
-                  eventColors[event.color as keyof typeof eventColors] || "bg-primary text-white"
-                )}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onEventClick(event, e);
-                }}
+                className="text-xs text-muted-foreground truncate"
               >
-                {event.title}
+                {events[0].title}
               </motion.div>
-            ))}
-            
-            {events.length > 3 && (
-              <div className="text-xs text-muted-foreground font-medium px-2">
-                +{events.length - 3} more
-              </div>
             )}
           </div>
         </div>

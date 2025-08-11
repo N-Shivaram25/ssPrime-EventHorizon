@@ -172,13 +172,15 @@
 /* Glass morphism effects */
 .glass {
   backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
 }
 
 .dark .glass {
-  background: rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* Neumorphic effects */
@@ -218,6 +220,69 @@
 /* Liquid smooth transitions */
 .liquid-transition {
   transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Calendar cell enhancements */
+.calendar-cell {
+  border-radius: 8px;
+  border: 1px solid #E5E7EB;
+  transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.dark .calendar-cell {
+  border: 1px solid #374151;
+}
+
+.calendar-cell:hover {
+  background: rgba(59, 130, 246, 0.1);
+  transform: scale(1.03);
+}
+
+.calendar-cell.current-date {
+  border: 2px solid #3B82F6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Event dots */
+.event-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 2px;
+}
+
+/* Minimalist input styling */
+.minimalist-input {
+  border: none;
+  border-bottom: 2px solid #E5E7EB;
+  background: transparent;
+  border-radius: 0;
+  padding: 8px 0;
+  transition: border-color 0.3s ease;
+}
+
+.minimalist-input:focus {
+  outline: none;
+  border-bottom-color: #3B82F6;
+  box-shadow: none;
+}
+
+.dark .minimalist-input {
+  border-bottom-color: #374151;
+  color: white;
+}
+
+.dark .minimalist-input:focus {
+  border-bottom-color: #3B82F6;
+}
+
+.minimalist-input::placeholder {
+  color: #9CA3AF;
+}
+
+.dark .minimalist-input::placeholder {
+  color: #6B7280;
 }
 
 /* 3D flip card styles */

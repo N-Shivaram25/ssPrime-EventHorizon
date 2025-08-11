@@ -168,7 +168,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
                 placeholder="Enter event title"
-                className="glass border-white/20 text-white placeholder:text-white/50 focus:ring-2 focus:ring-primary/50 liquid-transition"
+                className="minimalist-input text-white placeholder:text-white/50"
                 data-testid="input-event-title"
               />
             </div>
@@ -182,7 +182,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 type="date"
                 value={formData.date}
                 onChange={(e) => handleInputChange("date", e.target.value)}
-                className="glass border-white/20 text-white liquid-transition"
+                className="minimalist-input text-white"
                 data-testid="input-event-date"
               />
             </div>
@@ -197,7 +197,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                   type="time"
                   value={formData.startTime}
                   onChange={(e) => handleInputChange("startTime", e.target.value)}
-                  className="glass border-white/20 text-white liquid-transition"
+                  className="minimalist-input text-white"
                   data-testid="input-start-time"
                 />
               </div>
@@ -210,7 +210,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                   type="time"
                   value={formData.endTime}
                   onChange={(e) => handleInputChange("endTime", e.target.value)}
-                  className="glass border-white/20 text-white liquid-transition"
+                  className="minimalist-input text-white"
                   data-testid="input-end-time"
                 />
               </div>
@@ -246,18 +246,18 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
                 value={formData.description}
                 onChange={(e) => handleInputChange("description", e.target.value)}
                 placeholder="Add event description..."
-                className="resize-none glass border-white/20 text-white placeholder:text-white/50 liquid-transition"
+                className="resize-none minimalist-input text-white placeholder:text-white/50"
                 rows={3}
                 data-testid="textarea-event-description"
               />
             </div>
 
-            <div className="flex space-x-3 pt-4">
+            <div className="flex space-x-4 pt-6">
               <Button
                 type="button"
-                variant="outline"
+                variant="ghost"
                 onClick={onClose}
-                className="flex-1 glass border-white/20 text-white hover:bg-white/10 liquid-transition"
+                className="flex-1 text-white/70 hover:text-white hover:bg-transparent liquid-transition"
                 data-testid="button-cancel"
               >
                 Cancel
@@ -268,7 +268,7 @@ export default function EventModal({ isOpen, selectedDate, editingEvent, onClose
               >
                 <Button
                   type="submit"
-                  className="w-full bg-primary hover:bg-blue-600 liquid-transition hover:scale-105 hover:shadow-lg"
+                  className="w-full bg-blue-600 hover:bg-blue-700 text-white liquid-transition hover:scale-105 shadow-lg"
                   disabled={createMutation.isPending || updateMutation.isPending}
                   data-testid="button-save-event"
                 >
