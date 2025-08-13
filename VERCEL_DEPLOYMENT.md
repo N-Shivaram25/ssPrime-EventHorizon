@@ -1,6 +1,6 @@
 # Vercel Deployment Guide for Event Horizon
 
-This guide will help you deploy your Event Horizon project to Vercel.
+This guide will help you deploy your Event Horizon project to Vercel using a **separate client and server deployment** approach.
 
 ## Prerequisites
 
@@ -11,86 +11,92 @@ This guide will help you deploy your Event Horizon project to Vercel.
 
 **Important**: This project uses **local storage** (in-memory storage) and does not require a database. All data is stored in memory and will be reset when the serverless function restarts.
 
-## Step 1: Deploy to Vercel
+## Deployment Strategy
 
-### Option A: Deploy via Vercel Dashboard
+This project is now structured for **separate deployments**:
+1. **Client** (Frontend) - Deployed as a static site
+2. **Server** (Backend) - Deployed as serverless functions
 
-1. Go to [vercel.com/dashboard](https://vercel.com/dashboard)
-2. Click "New Project"
-3. Import your Git repository
-4. Configure the project:
-   - **Framework Preset**: Other
-   - **Root Directory**: `./` (leave as default)
-   - **Build Command**: `npm run vercel-build`
-   - **Output Directory**: `dist/public`
-   - **Install Command**: `npm install`
+## Step 1: Deploy Client First
 
-### Option B: Deploy via Vercel CLI
+Follow the detailed guide in [`CLIENT_DEPLOYMENT.md`](./CLIENT_DEPLOYMENT.md)
 
-1. Install Vercel CLI:
-   ```bash
-   npm i -g vercel
-   ```
+**Quick Setup:**
+- **Framework Preset**: Vite
+- **Root Directory**: `./client`
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
 
-2. Login to Vercel:
-   ```bash
-   vercel login
-   ```
+## Step 2: Deploy Server Second
 
-3. Deploy:
-   ```bash
-   vercel
-   ```
+Follow the detailed guide in [`SERVER_DEPLOYMENT.md`](./SERVER_DEPLOYMENT.md)
 
-## Step 2: Deploy
+**Quick Setup:**
+- **Framework Preset**: Other
+- **Root Directory**: `./server`
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist`
 
-1. Push your changes to your Git repository
-2. Vercel will automatically trigger a new deployment
-3. Wait for the build to complete
-4. Your app will be available at the provided Vercel URL
+## Step 3: Connect Client and Server
 
-## Project Structure for Vercel
+1. Get your server URL from Vercel dashboard
+2. Set environment variable in client deployment:
+   - `VITE_API_URL`: Your server URL (e.g., `https://your-server.vercel.app`)
+3. Redeploy client to apply changes
+
+## Project Structure
 
 ```
-├── api/
-│   └── index.ts          # Vercel serverless function
-├── client/               # Frontend React app
-│   ├── package.json      # Client package.json for Vercel
-│   └── src/
-├── server/               # Backend Express server
+├── client/               # Frontend React app (separate deployment)
+│   ├── src/              # React source code
+│   ├── package.json      # Client dependencies
+│   ├── vite.config.ts    # Vite configuration
+│   ├── vercel.json       # Client Vercel config
+│   └── ...
+├── server/               # Backend Express server (separate deployment)
+│   ├── index.ts          # Main server file
+│   ├── package.json      # Server dependencies
+│   ├── vercel.json       # Server Vercel config
+│   └── ...
 ├── shared/               # Shared types and schemas
-├── vercel.json           # Vercel configuration
-├── .vercelignore         # Files to exclude from deployment
-└── package.json          # Main package.json
+├── CLIENT_DEPLOYMENT.md  # Client deployment guide
+├── SERVER_DEPLOYMENT.md  # Server deployment guide
+└── ...
 ```
 
 ## Important Notes
 
-1. **Storage**: This project uses in-memory storage (local storage) - no database required
-2. **Data Persistence**: Data will be reset when the serverless function restarts
-3. **Build Process**: The frontend is built using Vite and served as static files
-4. **API Routes**: All `/api/*` routes are handled by the serverless function
-5. **Static Files**: All other routes serve the built React frontend
+1. **Separate Deployments**: Client and server are deployed as separate Vercel projects
+2. **Environment Variables**: Client needs `VITE_API_URL` pointing to server
+3. **CORS Configuration**: Server must allow requests from client domain
+4. **Storage**: Uses in-memory storage (data resets on function restart)
 
-## Limitations
+## Benefits of This Approach
 
-- **No Data Persistence**: Since this uses local storage, all data will be lost when the serverless function restarts
-- **Memory Usage**: All data is stored in memory, which may impact performance with large datasets
-- **Scaling**: Each serverless function instance will have its own separate data
+- **Better Separation**: Clear separation between frontend and backend
+- **Independent Scaling**: Client and server can scale independently
+- **Easier Debugging**: Separate logs and monitoring for each part
+- **Flexible Deployment**: Can deploy client and server to different regions
 
 ## Troubleshooting
 
-### Build Errors
-- Check that all dependencies are properly installed
-- Ensure the build command (`npm run vercel-build`) works locally
+### Client Issues
+- Check `CLIENT_DEPLOYMENT.md` for client-specific troubleshooting
+- Verify `VITE_API_URL` environment variable is set correctly
 
-### API Errors
-- Check the Vercel function logs in the dashboard
-- Verify that the function is properly deployed
+### Server Issues
+- Check `SERVER_DEPLOYMENT.md` for server-specific troubleshooting
+- Verify CORS configuration allows your client domain
+
+### Connection Issues
+- Ensure both client and server are deployed successfully
+- Check that API calls are going to the correct server URL
+- Verify CORS settings on the server
 
 ## Support
 
 If you encounter issues:
-1. Check the Vercel deployment logs
-2. Test your build process locally
-3. Check the Vercel documentation at [vercel.com/docs](https://vercel.com/docs)
+1. Check the respective deployment guides
+2. Review Vercel deployment logs for each project
+3. Test your build process locally
+4. Check the Vercel documentation at [vercel.com/docs](https://vercel.com/docs)
