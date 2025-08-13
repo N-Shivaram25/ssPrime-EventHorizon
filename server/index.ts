@@ -1,11 +1,19 @@
 import express, { type Request, Response, NextFunction } from "express";
+import cors from "cors";
 import { registerRoutes } from "./routes";
-import { setupVite, serveStatic, log } from "./vite";
 
 const app = express();
+
+// CORS configuration for production
+app.use(cors({
+  origin: process.env.CLIENT_URL || 'http://localhost:5173',
+  credentials: true
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
+// Logging middleware
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -29,38 +37,37 @@ app.use((req, res, next) => {
         logLine = logLine.slice(0, 79) + "…";
       }
 
-      log(logLine);
+      console.log(logLine);
     }
   });
 
   next();
 });
 
-(async () => {
-  const server = await registerRoutes(app);
+// Register API routes
+registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+// Error handling middleware
+app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+  const status = err.status || err.statusCode || 500;
+  const message = err.message || "Internal Server Error";
 
-    res.status(status).json({ message });
-    throw err;
-  });
+  res.status(status).json({ message });
+  console.error(err);
+});
 
-  // importantly only setup vite in development and after
-  // setting up all the other routes so the catch-all route
-  // doesn't interfere with the other routes
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
-  }
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
 
-  // Port configuration
+// For Vercel serverless functions
+export default app;
+
+// For local development
+if (process.env.NODE_ENV !== 'production') {
   const port = parseInt(process.env.PORT || "5000", 10);
-
-  // Bind only to localhost and avoid reusePort (not supported on Windows)
-  server.listen(port, "127.0.0.1", () => {
-    log(`serving on http://127.0.0.1:${port}`);
+  app.listen(port, "127.0.0.1", () => {
+    console.log(`Server running on http://127.0.0.1:${port}`);
   });
-})();
+}
