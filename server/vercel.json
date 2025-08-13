@@ -1,13 +1,13 @@
 {
   "functions": {
-    "index.ts": {
+    "api/index.ts": {
       "maxDuration": 30
     }
   },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/index.ts"
+      "destination": "/api/index.ts"
     }
   ]
 }
