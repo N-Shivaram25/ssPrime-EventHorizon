@@ -132,6 +132,10 @@ export class MemStorage implements IStorage {
     const event: Event = { 
       ...insertEvent, 
       id,
+      color: insertEvent.color || "#3B82F6",
+      description: insertEvent.description || null,
+      startTime: insertEvent.startTime || null,
+      endTime: insertEvent.endTime || null,
       createdAt: new Date()
     };
     this.events.set(id, event);

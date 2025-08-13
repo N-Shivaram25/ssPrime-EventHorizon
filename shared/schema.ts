@@ -1,37 +1,35 @@
-import { sql } from "drizzle-orm";
-import { pgTable, text, varchar, timestamp } from "drizzle-orm/pg-core";
-import { createInsertSchema } from "drizzle-zod";
-import { z } from "zod";
+import { z } from "z";
 
-export const events = pgTable("events", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  title: text("title").notNull(),
-  description: text("description"),
-  date: varchar("date").notNull(), // YYYY-MM-DD format
-  startTime: varchar("start_time"), // HH:MM format
-  endTime: varchar("end_time"), // HH:MM format
-  color: varchar("color").notNull().default("#3B82F6"),
-  createdAt: timestamp("created_at").defaultNow(),
+// Event schema
+export const eventSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  description: z.string().nullable(),
+  date: z.string(), // YYYY-MM-DD format
+  startTime: z.string().nullable(), // HH:MM format
+  endTime: z.string().nullable(), // HH:MM format
+  color: z.string().default("#3B82F6"),
+  createdAt: z.date().nullable(),
 });
 
-export const insertEventSchema = createInsertSchema(events).omit({
+export const insertEventSchema = eventSchema.omit({
   id: true,
   createdAt: true,
 });
 
 export type InsertEvent = z.infer<typeof insertEventSchema>;
-export type Event = typeof events.$inferSelect;
+export type Event = z.infer<typeof eventSchema>;
 
-export const users = pgTable("users", {
-  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
-  username: text("username").notNull().unique(),
-  password: text("password").notNull(),
+// User schema
+export const userSchema = z.object({
+  id: z.string(),
+  username: z.string(),
+  password: z.string(),
 });
 
-export const insertUserSchema = createInsertSchema(users).pick({
-  username: true,
-  password: true,
+export const insertUserSchema = userSchema.omit({
+  id: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;
-export type User = typeof users.$inferSelect;
+export type User = z.infer<typeof userSchema>;
